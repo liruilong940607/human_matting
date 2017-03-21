@@ -1,0 +1,6 @@
+*.caffemodel
+*.solverstate
+/fcn_seg/data/
+*.pyc
+/fcn_seg/caffe/
+.gitignore~
