@@ -1,0 +1,12 @@
+I0322 11:24:54.739135  9371 solver.cpp:219] Iteration 130000 (9338.81 iter/s, 13.9204s/20 iters), loss = 0.112959
+I0322 11:24:54.739198  9371 solver.cpp:238]     Train net output #0: loss = 0.0910492 (* 1 = 0.0910492 loss)
+I0322 11:24:54.739205  9371 sgd_solver.cpp:105] Iteration 130000, lr = 1e-07
+I0322 11:29:24.727375  9371 solver.cpp:219] Iteration 130020 (0.0740806 iter/s, 269.976s/20 iters), loss = 0.120595
+I0322 11:29:24.727437  9371 solver.cpp:238]     Train net output #0: loss = 0.0773471 (* 1 = 0.0773471 loss)
+I0322 11:29:24.727444  9371 sgd_solver.cpp:105] Iteration 130020, lr = 1e-07
+I0322 11:33:54.354063  9371 solver.cpp:219] Iteration 130040 (0.0741798 iter/s, 269.615s/20 iters), loss = 0.117483
+I0322 11:33:54.354122  9371 solver.cpp:238]     Train net output #0: loss = 0.153808 (* 1 = 0.153808 loss)
+I0322 11:33:54.354130  9371 sgd_solver.cpp:105] Iteration 130040, lr = 1e-07
+
+
+

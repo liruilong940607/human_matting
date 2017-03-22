@@ -22,8 +22,9 @@ if not os.path.exists(new_folder_name):
 	old_file_list = os.listdir(old_folder_name)
 	for file in old_file_list:
 		if not file =='snapshot':
-			shutil.copyfile(os.path.join(old_folder_name,file), \
-				os.path.join(new_folder_name,file))
+			if not file[0]=='.':
+				shutil.copyfile(os.path.join(old_folder_name,file), \
+					os.path.join(new_folder_name,file))
 else:
 	print '[mkdir failed]: {} has exist!'.format(new_folder_name)
 	sys.exit(0)  
