@@ -13,8 +13,8 @@ stepsize: 5000
 snapshot: 10000
 test_initialization: false
 average_loss: 20
-iter_size: 10
-snapshot_prefix:"./snapshot/douyu_2700_train"
+iter_size: 1
+snapshot_prefix:"./snapshot/douyu_2700_train_600_376"
 
 
 ## tutorial

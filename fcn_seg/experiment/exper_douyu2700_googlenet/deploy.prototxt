@@ -2227,3 +2227,14 @@ layer {
     offset: 12
   }
 } # 500 * 500
+
+layer {
+  bottom: "score"
+  top: "prob"
+  name: "prob"
+  type: "Softmax"
+  softmax_param {axis: 1}
+  include {
+    phase: TEST
+  }
+}

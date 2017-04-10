@@ -1,0 +1,33 @@
+net: "/home/mfs6174/workspace0/VGG16_1c.prototxt"
+test_iter: 184
+# make test net, but don't invoke it from the solver itself
+test_interval: 200
+display: 50
+average_loss: 200
+lr_policy: "fixed"
+# lr for unnormalized softmax
+base_lr: 1e-2
+gamma: 0.1
+stepsize: 50000
+# high momentum
+momentum: 0.95
+# no gradient accumulation
+iter_size: 1
+max_iter: 3000000
+weight_decay: 0.00025
+test_initialization: true
+snapshot:1000
+snapshot_prefix:"/home/mfs6174/workspace0/models/vgg_co_1labels_minAug_3c"
+
+
+
+## tutorial
+#base_lr: 0.01     # begin training at a learning rate of 0.01 = 1e-2
+
+#lr_policy: "step" # learning rate policy: drop the learning rate in "steps"
+                  # by a factor of gamma every stepsize iterations
+
+#gamma: 0.1        # drop the learning rate by a factor of 10
+                  # (i.e., multiply it by a factor of gamma = 0.1)
+
+#stepsize: 100000  # drop the learning rate every 100K iterations

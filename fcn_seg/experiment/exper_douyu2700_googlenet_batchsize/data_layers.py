@@ -3,7 +3,7 @@ import caffe
 import numpy as np
 from PIL import Image
 import scipy.io
-
+import time
 import random
 
 import cv2,os
@@ -42,8 +42,8 @@ class Douyu1000SegDataLayer(caffe.Layer):
         self.random = params.get('randomize', True)
         self.seed = params.get('seed', None)
         self.batch_size = params.get('batch_size',16)
-        self.flip = params.get('flip', 0)
-        self.crop = params.get('crop', 0)
+        self.flip = params.get('flip', 1)
+        self.crop = params.get('crop', 1)
 
         # two tops: data, semantic
         if len(top) != 2:
@@ -69,7 +69,14 @@ class Douyu1000SegDataLayer(caffe.Layer):
             random.shuffle(self.indices)
 
         self.idx = 0
-
+    
+    def time_me(fn):
+        def _wrapper(*args, **kwargs):
+            start = time.clock()
+            fn(*args, **kwargs)
+            print "%s cost %s second"%(fn.__name__, time.clock() - start)
+        return _wrapper
+    
     def reshape(self, bottom, top):
         # load image + label image pair
         if self.flip:
@@ -86,7 +93,7 @@ class Douyu1000SegDataLayer(caffe.Layer):
         # reshape tops to fit (leading 1 is for batch dimension)
         top[0].reshape(*self.data.shape)
         top[1].reshape(*self.alabel.shape)
-
+        
     def forward(self, bottom, top):
         # assign output
         top[0].data[...] = self.data
@@ -100,7 +107,7 @@ class Douyu1000SegDataLayer(caffe.Layer):
 
     def backward(self, top, propagate_down, bottom):
         pass
-
+    
     def load_image(self,flip,crop):
         """
         Load input image and preprocess for Caffe:
@@ -109,9 +116,13 @@ class Douyu1000SegDataLayer(caffe.Layer):
         - subtract mean
         - transpose to channel x height x width order
         """
-        in_batch = []
-        for i in xrange(self.batch_size):
+        start = time.clock()
+        imshape = (376, 600, 3)#368,640
+        in_batch = np.ndarray(shape=(self.batch_size, imshape[2], imshape[1], imshape[0]), dtype=np.float32)
+        for i in xrange(self.batch_size):   
+            start = time.clock()
             im = Image.open('{}/Images/{}.png'.format(self.data_dir, self.dataset[self.indices[self.idx+i]]))
+            im = im.resize([376,600])
             #im.save('test_resize.png')
             if flip[i]:
                 im = np.fliplr(im)
@@ -131,22 +142,26 @@ class Douyu1000SegDataLayer(caffe.Layer):
             in_ = in_[:,:,::-1]
             in_ -= self.mean
             in_ = in_.transpose((2,0,1))
-            in_batch.append(in_)
-        in_batch = np.asarray(in_batch)
-        #print "image_shape: "
-        #print in_batch.shape
+            assert in_.shape == (imshape[2], imshape[1], imshape[0])
+            in_batch[i,:,:,:] = in_.copy()
+            #in_batch.append(in_)
+        #print "Image.open cost %s second"%(time.clock() - start)
+        #in_batch = np.asarray(in_batch)
         return in_batch
-
+    
     def load_label(self,flip,crop):
         """
         Load label image as 1 x height x width integer array of label indices.
         The leading singleton dimension is required by the loss.
         """
-        label_batch = []
+        #label_batch = []
+        imshape = (376, 600, 1)
+        label_batch = np.ndarray(shape=(self.batch_size, imshape[2], imshape[1], imshape[0]), dtype=np.float32)
         if True:
             for i in xrange(self.batch_size):
                 label = scipy.io.loadmat('{}/Labels/{}.mat'.format(self.data_dir, self.dataset[self.indices[self.idx+i]]))['label']
                 im = Image.fromarray(np.uint8(label))
+                im = im.resize([376,600],Image.NEAREST)
                 if flip[i]:
                     im = np.fliplr(im)
                     im = Image.fromarray(np.uint8(im))
@@ -161,10 +176,10 @@ class Douyu1000SegDataLayer(caffe.Layer):
                 label[label==2] = 1
                 label = label.astype(np.uint8)
                 label = label[np.newaxis, ...]
-                label_batch.append(label)
+                label_batch[i,:,:,:] = label.copy()
+                #label_batch.append(label)
         else:
             raise Exception("Unknown label type: {}. Pick semantic.".format(label_type))
-        label_batch = np.asarray(label_batch)
-        #print "label_shape: "
-        #print label_batch.shape
+        #label_batch = np.asarray(label_batch)
+        
         return label_batch

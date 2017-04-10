@@ -2,5 +2,12 @@
 *.solverstate
 /fcn_seg/data/
 *.pyc
+*.log
+*.mat
 /fcn_seg/caffe/
 .gitignore~
+/fcn_seg/xinjin_model/douyu_2700/
+/fcn_seg/xinjin_model/test5/
+/fcn_seg/xinjin_model/test6/
+/deeplab-public-ver2/
+/somevideo/

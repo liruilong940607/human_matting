@@ -21,7 +21,7 @@ if not os.path.exists(new_folder_name):
 	os.makedirs(os.path.join(new_folder_name,'snapshot'))
 	old_file_list = os.listdir(old_folder_name)
 	for file in old_file_list:
-		if not file =='snapshot':
+		if not (file =='snapshot' or file=='Untitled.ipynb' or file=='iter_iou_test.jpg' or file=='iter_loss_train.jpg' or file=='train.log' or file=='draw'):
 			if not file[0]=='.':
 				shutil.copyfile(os.path.join(old_folder_name,file), \
 					os.path.join(new_folder_name,file))
